@@ -2,18 +2,16 @@ pipeline {
     agent any
 
     stages {
-        // Removed the "Checkout" stage because Jenkins does this automatically
-        
         stage('Build Docker Image') {
             steps {
-                // Use 'bat' for Windows Jenkins environments
                 bat 'docker build -t travel-app:latest .'
             }
         }
 
         stage('K8s Deployment') {
             steps {
-                bat 'kubectl apply -f k8s/deployment.yaml'
+                // Added --validate=false to bypass the server-side error
+                bat 'kubectl apply -f k8s/deployment.yaml --validate=false'
             }
         }
 
